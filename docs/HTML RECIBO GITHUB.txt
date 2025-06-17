@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VENTAS - AppSheet</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f6f6f9; }
+        h2 { color: #333366; }
+        .section { background: #fff; padding: 1.5em; margin-bottom: 2em; border-radius: 8px; box-shadow: 0 2px 8px #00000009; }
+        .field { margin-bottom: 1em; }
+        .field label { font-weight: bold; display: block; color: #555; }
+        .field span { display: block; margin-left: 1em; color: #222; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5em; }
+        th, td { padding: 0.5em; border: 1px solid #ccc; text-align: left; }
+        th { background: #efefef; }
+    </style>
+</head>
+<body>
+    <h2>VENTAS</h2>
+    <div class="section">
+        <div class="field"><label>FECHA:</label><span>&lt;&lt;[FECHA]&gt;&gt;</span></div>
+        <div class="field"><label>TOTAL:</label><span>&lt;&lt;[TOTAL]&gt;&gt;</span></div>
+        <div class="field"><label>ABONO:</label><span>&lt;&lt;[ABONO]&gt;&gt;</span></div>
+        <div class="field"><label>SALDO:</label><span>&lt;&lt;[SALDO]&gt;&gt;</span></div>
+        <div class="field"><label>N FACTURA:</label><span>&lt;&lt;[N FACTURA]&gt;&gt;</span></div>
+        <div class="field"><label>ARCHIVO:</label><span>&lt;&lt;[ARCHIVO]&gt;&gt;</span></div>
+        <div class="field"><label>CLIENTE:</label><span>&lt;&lt;[CLIENTE]&gt;&gt;</span></div>
+        <div class="field"><label>DETALLE:</label><span>&lt;&lt;[DETALLE]&gt;&gt;</span></div>
+        <div class="field"><label>ESTADO:</label><span>&lt;&lt;[ESTADO]&gt;&gt;</span></div>
+        <div class="field"><label>TOTALapp:</label><span>&lt;&lt;[TOTALapp]&gt;&gt;</span></div>
+        <div class="field"><label>ABONOSapp:</label><span>&lt;&lt;[ABONOSapp]&gt;&gt;</span></div>
+        <div class="field"><label>SALDOapp:</label><span>&lt;&lt;[SALDOapp]&gt;&gt;</span></div>
+    </div>
+
+    <h2>ORDEN_PRODUCT</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID_ORDEN_PRODUCT</th>
+                <th>N FACTURA</th>
+                <th>ID_PRODUCTO</th>
+                <th>NOMBRE PRODUCTO</th>
+                <th>UNIDADES</th>
+            </tr>
+        </thead>
+        <tbody>
+            &lt;&lt;Start: [Related ORDEN_PRODUCTs]&gt;&gt;
+            <tr>
+                <td>&lt;&lt;[ID_ORDEN_PRODUCT]&gt;&gt;</td>
+                <td>&lt;&lt;[N FACTURA]&gt;&gt;</td>
+                <td>&lt;&lt;[ID_PRODUCTO]&gt;&gt;</td>
+                <td>&lt;&lt;[NOMBRE PRODUCTO]&gt;&gt;</td>
+                <td>&lt;&lt;[UNIDADES]&gt;&gt;</td>
+            </tr>
+            &lt;&lt;End&gt;&gt;
+        </tbody>
+    </table>
+</body>
+</html>
