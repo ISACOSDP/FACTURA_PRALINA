@@ -14,9 +14,12 @@
         th, td { padding: 0.5em; border: 1px solid #ccc; text-align: left; }
         th { background: #efefef; }
         .totales { font-size: 16px; font-weight: bold; text-align: right; margin-top: 1em; }
+        .logo { display: block; margin: auto; max-width: 200px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
+
+    <img class="logo" src="https://raw.githubusercontent.com/ISACOSDP/FACTURA_PRALINA/cd6ee701f353b6ba57f45188f43384187291941a/docs/LOGO%20LA%20PAMMPA.png" alt="LOGO PRALINA">
 
     <h2>FACTURA PRALINA</h2>
 
@@ -61,13 +64,13 @@
 
             tableBody.innerHTML = "";
             for (let i = 0; i < cantidadesArray.length; i++) {
-                let total = (parseFloat(cantidadesArray[i]) * parseFloat(preciosArray[i])).toFixed(2);
+                let totalLinea = (parseFloat(cantidadesArray[i]) * parseFloat(preciosArray[i])).toFixed(2);
                 let row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${cantidadesArray[i]}</td>
                     <td>${productosArray[i]}</td>
                     <td>$${preciosArray[i]}</td>
-                    <td>$${total}</td>
+                    <td>$${totalLinea}</td>
                 `;
                 tableBody.appendChild(row);
             }
