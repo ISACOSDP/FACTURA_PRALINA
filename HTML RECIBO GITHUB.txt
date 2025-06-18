@@ -1,59 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>VENTAS - AppSheet</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factura PRALINA</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 2em; background: #f6f6f9; }
-        h2 { color: #333366; }
-        .section { background: #fff; padding: 1.5em; margin-bottom: 2em; border-radius: 8px; box-shadow: 0 2px 8px #00000009; }
-        .field { margin-bottom: 1em; }
-        .field label { font-weight: bold; display: block; color: #555; }
-        .field span { display: block; margin-left: 1em; color: #222; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1.5em; }
+        body { font-family: Arial, sans-serif; margin: 1em; background: #f6f6f9; }
+        h2 { color: #333366; text-align: center; }
+        .section { background: #fff; padding: 1em; border-radius: 8px; box-shadow: 0 2px 8px #00000009; margin-bottom: 1.5em; }
+        .field { font-size: 14px; margin-bottom: 0.5em; }
+        .label { font-weight: bold; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1em; font-size: 14px; }
         th, td { padding: 0.5em; border: 1px solid #ccc; text-align: left; }
         th { background: #efefef; }
+        .totales { font-size: 16px; font-weight: bold; text-align: right; margin-top: 1em; }
     </style>
 </head>
 <body>
-    <h2>VENTAS</h2>
+
+    <h2>FACTURA PRALINA</h2>
+
     <div class="section">
-        <div class="field"><label>FECHA:</label><span>&lt;&lt;[FECHA]&gt;&gt;</span></div>
-        <div class="field"><label>TOTAL:</label><span>&lt;&lt;[TOTAL]&gt;&gt;</span></div>
-        <div class="field"><label>ABONO:</label><span>&lt;&lt;[ABONO]&gt;&gt;</span></div>
-        <div class="field"><label>SALDO:</label><span>&lt;&lt;[SALDO]&gt;&gt;</span></div>
-        <div class="field"><label>N FACTURA:</label><span>&lt;&lt;[N FACTURA]&gt;&gt;</span></div>
-        <div class="field"><label>ARCHIVO:</label><span>&lt;&lt;[ARCHIVO]&gt;&gt;</span></div>
-        <div class="field"><label>CLIENTE:</label><span>&lt;&lt;[CLIENTE]&gt;&gt;</span></div>
-        <div class="field"><label>DETALLE:</label><span>&lt;&lt;[DETALLE]&gt;&gt;</span></div>
-        <div class="field"><label>ESTADO:</label><span>&lt;&lt;[ESTADO]&gt;&gt;</span></div>
-        <div class="field"><label>TOTALapp:</label><span>&lt;&lt;[TOTALapp]&gt;&gt;</span></div>
-        <div class="field"><label>ABONOSapp:</label><span>&lt;&lt;[ABONOSapp]&gt;&gt;</span></div>
-        <div class="field"><label>SALDOapp:</label><span>&lt;&lt;[SALDOapp]&gt;&gt;</span></div>
+        <div class="field"><span class="label">Factura N°:</span> <span id="factura"></span></div>
+        <div class="field"><span class="label">Cliente:</span> <span id="cliente"></span></div>
+        <div class="field"><span class="label">Fecha:</span> <span id="fecha"></span></div>
     </div>
 
-    <h2>ORDEN_PRODUCT</h2>
     <table>
         <thead>
             <tr>
-                <th>ID_ORDEN_PRODUCT</th>
-                <th>N FACTURA</th>
-                <th>ID_PRODUCTO</th>
-                <th>NOMBRE PRODUCTO</th>
-                <th>UNIDADES</th>
+                <th>Cant.</th>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
             </tr>
         </thead>
-        <tbody>
-            &lt;&lt;Start: [Related ORDEN_PRODUCTs]&gt;&gt;
-            <tr>
-                <td>&lt;&lt;[ID_ORDEN_PRODUCT]&gt;&gt;</td>
-                <td>&lt;&lt;[N FACTURA]&gt;&gt;</td>
-                <td>&lt;&lt;[ID_PRODUCTO]&gt;&gt;</td>
-                <td>&lt;&lt;[NOMBRE PRODUCTO]&gt;&gt;</td>
-                <td>&lt;&lt;[UNIDADES]&gt;&gt;</td>
-            </tr>
-            &lt;&lt;End&gt;&gt;
-        </tbody>
+        <tbody id="detalle"></tbody>
     </table>
+
+    <div class="totales">
+        <p>Total: $<span id="total"></span></p>
+        <p>Abonado: $<span id="abonado"></span></p>
+        <p>Saldo: $<span id="saldo"></span></p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("factura").innerText = urlParams.get("factura") || "N/A";
+        document.getElementById("cliente").innerText = urlParams.get("cliente") || "N/A";
+        document.getElementById("fecha").innerText = urlParams.get("fecha") || "N/A";
+        document.getElementById("total").innerText = urlParams.get("total") || "0.00";
+        document.getElementById("abonado").innerText = urlParams.get("abonado") || "0.00";
+        document.getElementById("saldo").innerText = urlParams.get("saldo") || "0.00";
+
+        function populateTable(elementId, cantidades, productos, precios) {
+            let tableBody = document.getElementById(elementId);
+            let cantidadesArray = cantidades ? cantidades.split(",").map(i => i.trim()) : [];
+            let productosArray = productos ? productos.split(",").map(i => i.trim()) : [];
+            let preciosArray = precios ? precios.split(",").map(i => i.trim()) : [];
+
+            tableBody.innerHTML = "";
+            for (let i = 0; i < cantidadesArray.length; i++) {
+                let total = (parseFloat(cantidadesArray[i]) * parseFloat(preciosArray[i])).toFixed(2);
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${cantidadesArray[i]}</td>
+                    <td>${productosArray[i]}</td>
+                    <td>$${preciosArray[i]}</td>
+                    <td>$${total}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        populateTable(
+            "detalle",
+            urlParams.get("cantidades"),
+            urlParams.get("productos"),
+            urlParams.get("precios")
+        );
+    </script>
+
 </body>
 </html>
