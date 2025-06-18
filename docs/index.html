@@ -43,10 +43,10 @@
         }
 
         .recibo-numero {
-            text-align: center; 
-            font-size: 18px; 
+            margin-top: 10px; 
+            font-size: 22px; 
             font-weight: bold; 
-            margin-bottom: 10px;
+            text-align: center;
         }
 
         .section-info { 
@@ -108,10 +108,11 @@
         <div class="header-text">
             GRUPO LA PAMPA<br>
             GUARANDA<br>
-            0993552201<br>
-RECIBO N°: <span id="factura"></span>
+            0993552201
+            <div class="recibo-numero">
+                RECIBO N°: <span id="factura"></span>
+            </div>
         </div>
-    </div>     
     </div>
 
     <div class="section-info">
@@ -124,7 +125,9 @@ RECIBO N°: <span id="factura"></span>
             <tr>
                 <th>COD PRODUCTO</th>
                 <th>PRODUCTO</th>
+                <th>PRECIO UNITARIO</th>
                 <th>CANTIDAD</th>
+                <th>TOTAL</th>
             </tr>
         </thead>
         <tbody id="detalle"></tbody>
@@ -156,19 +159,26 @@ RECIBO N°: <span id="factura"></span>
         document.getElementById("saldo").innerText = urlParams.get("saldo") || "0.00";
         document.getElementById("nota").innerText = urlParams.get("nota") || "";
 
-        function populateTable(elementId, codigos, productos, cantidades) {
+        function populateTable(elementId, codigos, productos, precios, cantidades) {
             let tableBody = document.getElementById(elementId);
             let codigosArray = codigos ? codigos.split(",").map(i => i.trim()) : [];
             let productosArray = productos ? productos.split(",").map(i => i.trim()) : [];
-            let cantidadesArray = cantidades ? cantidades.split(",").map(i => i.trim()) : [];
+            let preciosArray = precios ? precios.split(",").map(i => parseFloat(i.trim())) : [];
+            let cantidadesArray = cantidades ? cantidades.split(",").map(i => parseInt(i.trim())) : [];
 
             tableBody.innerHTML = "";
             for (let i = 0; i < productosArray.length; i++) {
+                let precioUnitario = preciosArray[i] || 0;
+                let cantidad = cantidadesArray[i] || 0;
+                let totalLinea = precioUnitario * cantidad;
+
                 let row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${codigosArray[i] || "-"}</td>
                     <td>${productosArray[i]}</td>
-                    <td>${cantidadesArray[i]}</td>
+                    <td>$${precioUnitario.toFixed(2)}</td>
+                    <td>${cantidad}</td>
+                    <td>$${totalLinea.toFixed(2)}</td>
                 `;
                 tableBody.appendChild(row);
             }
@@ -178,6 +188,7 @@ RECIBO N°: <span id="factura"></span>
             "detalle",
             urlParams.get("codigos"),
             urlParams.get("productos"),
+            urlParams.get("precios"),
             urlParams.get("cantidades")
         );
     </script>
